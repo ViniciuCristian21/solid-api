@@ -1,0 +1,25 @@
+import { CreateUserUseCase } from './CreateUserUseCase';
+import { Request, Response } from 'express';
+
+export class CrateUserController {
+    constructor(
+        private crateUserUseCase: CreateUserUseCase,
+    ) {}
+    async handle(req: Request, res: Response): Promise<Response> {
+        const {name, email, password} = req.body;
+        
+        try {
+            await this.crateUserUseCase.execute({
+                name,
+                email,
+                password
+            })
+
+            return res.status(201).send();
+        } catch (err) {
+            return res.status(400).json({
+                message: err.message || 'Unexpected error.',
+            })
+        }
+    }
+}
